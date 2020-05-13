@@ -208,7 +208,7 @@ public class InfoPanel extends PluginPanel
 
 	private void getPlayerInfo()
 	{
-		if (client != null)
+		if (client != null && client.getLocalPlayer() != null)
 		{
 
 			HashMap<String, HashMap> output_dict = new HashMap<>();
