@@ -27,13 +27,17 @@ package net.runelite.client.plugins.info;
 
 import com.google.common.base.MoreObjects;
 import com.google.inject.Inject;
+import com.google.gson.Gson;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
@@ -45,6 +49,11 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.HyperlinkEvent;
 import net.runelite.api.Client;
+import net.runelite.api.Favour;
+import net.runelite.api.Quest;
+import net.runelite.api.Skill;
+import net.runelite.api.VarPlayer;
+import net.runelite.api.vars.SlayerUnlock;
 import net.runelite.client.events.SessionClose;
 import net.runelite.client.events.SessionOpen;
 import net.runelite.client.RuneLiteProperties;
@@ -78,6 +87,9 @@ public class InfoPanel extends PluginPanel
 	@Inject
 	@Nullable
 	private Client client;
+
+	@Inject
+	private Gson gson;
 
 	@Inject
 	private EventBus eventBus;
@@ -129,7 +141,7 @@ public class InfoPanel extends PluginPanel
 		revision.setText(htmlLabel("Oldschool revision: ", engineVer));
 
 		JLabel launcher = new JLabel(htmlLabel("Launcher version: ", MoreObjects
-			.firstNonNull(RuneLiteProperties.getLauncherVersion(), "Unknown")));
+				.firstNonNull(RuneLiteProperties.getLauncherVersion(), "Unknown")));
 		launcher.setFont(smallFont);
 
 		loggedLabel.setForeground(ColorScheme.LIGHT_GRAY_COLOR);
@@ -163,9 +175,9 @@ public class InfoPanel extends PluginPanel
 		syncPanel = buildLinkPanel(IMPORT_ICON, "Import local settings", "to remote RuneLite account", () ->
 		{
 			final int result = JOptionPane.showOptionDialog(syncPanel,
-				"This will replace your current RuneLite account settings with settings from your local profile.",
-				"Are you sure?", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE,
-				null, new String[]{"Yes", "No"}, "No");
+					"This will replace your current RuneLite account settings with settings from your local profile.",
+					"Are you sure?", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE,
+					null, new String[]{"Yes", "No"}, "No");
 
 			if (result == JOptionPane.YES_OPTION)
 			{
@@ -177,6 +189,7 @@ public class InfoPanel extends PluginPanel
 		actionsContainer.add(buildLinkPanel(DISCORD_ICON, "Talk to us on our", "Discord server", RuneLiteProperties.getDiscordInvite()));
 		actionsContainer.add(buildLinkPanel(PATREON_ICON, "Become a patron to", "help support RuneLite", RuneLiteProperties.getPatreonLink()));
 		actionsContainer.add(buildLinkPanel(WIKI_ICON, "Information about", "RuneLite and plugins", RuneLiteProperties.getWikiLink()));
+		actionsContainer.add(buildLinkPanel(IMPORT_ICON, "Export info to", "online calculators", this::getPlayerInfo));
 
 		add(versionPanel, BorderLayout.NORTH);
 		add(actionsContainer, BorderLayout.CENTER);
@@ -191,6 +204,53 @@ public class InfoPanel extends PluginPanel
 	private static JPanel buildLinkPanel(ImageIcon icon, String topText, String bottomText, String url)
 	{
 		return buildLinkPanel(icon, topText, bottomText, () -> LinkBrowser.browse(url));
+	}
+
+	private void getPlayerInfo()
+	{
+		HashMap<String, HashMap> output_dict = new HashMap<>();
+
+		//Quests
+		HashMap<Integer, String> quest_dict = new HashMap<>();
+		for (Quest quest : Quest.values())
+		{
+			quest_dict.put(quest.getId(), quest.getState(client).name());
+		}
+		output_dict.put("Quests",quest_dict);
+
+		//Skills
+		HashMap<String, Integer> skill_dict = new HashMap<>();
+		for (Skill skill : Skill.values())
+		{
+			skill_dict.put(skill.getName(), client.getRealSkillLevel(skill));
+		}
+		output_dict.put("Skills",skill_dict);
+
+		//Favour
+		HashMap<String, Integer> favour_dict = new HashMap<>();
+		for (Favour favour : Favour.values())
+		{
+			favour_dict.put(favour.getName(), client.getVar(favour.getVarbit()));
+		}
+		output_dict.put("Favour",favour_dict);
+
+		//Slayer
+		HashMap<SlayerUnlock, Boolean> slayer_dict = new HashMap<>();
+		for (SlayerUnlock slayerunlock : SlayerUnlock.values())
+		{
+			slayer_dict.put(slayerunlock,slayerunlock.isEnabled(client));
+		}
+		output_dict.put("Slayer Unlocks",slayer_dict);
+
+		//Other
+		HashMap<String, Integer> other_dict = new HashMap<String, Integer>();
+		other_dict.put("Quest Points", client.getVar(VarPlayer.QUEST_POINTS));
+		other_dict.put("Combat Level", client.getLocalPlayer().getCombatLevel());
+		output_dict.put("Other",other_dict);
+
+		String output = gson.toJson(output_dict);
+		StringSelection stringselection = new StringSelection(output);
+		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringselection, null);
 	}
 
 	/**
@@ -270,8 +330,8 @@ public class InfoPanel extends PluginPanel
 	private void updateLoggedIn()
 	{
 		final String name = sessionManager.getAccountSession() != null
-			? sessionManager.getAccountSession().getUsername()
-			: null;
+				? sessionManager.getAccountSession().getUsername()
+				: null;
 
 		if (name != null)
 		{
