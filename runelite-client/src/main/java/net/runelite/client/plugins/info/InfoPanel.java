@@ -240,12 +240,12 @@ public class InfoPanel extends PluginPanel
 		{
 			slayer_dict.put(slayerunlock,slayerunlock.isEnabled(client));
 		}
-		output_dict.put("Slayer Unlocks",slayer_dict);
+		output_dict.put("SlayerUnlocks",slayer_dict);
 
 		//Other
 		HashMap<String, Integer> other_dict = new HashMap<String, Integer>();
-		other_dict.put("Quest Points", client.getVar(VarPlayer.QUEST_POINTS));
-		other_dict.put("Combat Level", client.getLocalPlayer().getCombatLevel());
+		other_dict.put("QP", client.getVar(VarPlayer.QUEST_POINTS));
+		other_dict.put("Combat", client.getLocalPlayer().getCombatLevel());
 		output_dict.put("Other",other_dict);
 
 		String output = gson.toJson(output_dict);
