@@ -141,7 +141,7 @@ public class InfoPanel extends PluginPanel
 		revision.setText(htmlLabel("Oldschool revision: ", engineVer));
 
 		JLabel launcher = new JLabel(htmlLabel("Launcher version: ", MoreObjects
-				.firstNonNull(RuneLiteProperties.getLauncherVersion(), "Unknown")));
+			.firstNonNull(RuneLiteProperties.getLauncherVersion(), "Unknown")));
 		launcher.setFont(smallFont);
 
 		loggedLabel.setForeground(ColorScheme.LIGHT_GRAY_COLOR);
@@ -175,9 +175,9 @@ public class InfoPanel extends PluginPanel
 		syncPanel = buildLinkPanel(IMPORT_ICON, "Import local settings", "to remote RuneLite account", () ->
 		{
 			final int result = JOptionPane.showOptionDialog(syncPanel,
-					"This will replace your current RuneLite account settings with settings from your local profile.",
-					"Are you sure?", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE,
-					null, new String[]{"Yes", "No"}, "No");
+				"This will replace your current RuneLite account settings with settings from your local profile.",
+				"Are you sure?", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE,
+				null, new String[]{"Yes", "No"}, "No");
 
 			if (result == JOptionPane.YES_OPTION)
 			{
@@ -216,7 +216,7 @@ public class InfoPanel extends PluginPanel
 		{
 			quest_dict.put(quest.getId(), quest.getState(client).name());
 		}
-		output_dict.put("Quests",quest_dict);
+		output_dict.put("Quests", quest_dict);
 
 		//Skills
 		HashMap<String, Integer> skill_dict = new HashMap<>();
@@ -224,7 +224,7 @@ public class InfoPanel extends PluginPanel
 		{
 			skill_dict.put(skill.getName(), client.getRealSkillLevel(skill));
 		}
-		output_dict.put("Skills",skill_dict);
+		output_dict.put("Skills", skill_dict);
 
 		//Favour
 		HashMap<String, Integer> favour_dict = new HashMap<>();
@@ -232,21 +232,21 @@ public class InfoPanel extends PluginPanel
 		{
 			favour_dict.put(favour.getName(), client.getVar(favour.getVarbit()));
 		}
-		output_dict.put("Favour",favour_dict);
+		output_dict.put("Favour", favour_dict);
 
 		//Slayer
 		HashMap<SlayerUnlock, Boolean> slayer_dict = new HashMap<>();
 		for (SlayerUnlock slayerunlock : SlayerUnlock.values())
 		{
-			slayer_dict.put(slayerunlock,slayerunlock.isEnabled(client));
+			slayer_dict.put(slayerunlock, slayerunlock.isEnabled(client));
 		}
-		output_dict.put("SlayerUnlocks",slayer_dict);
+		output_dict.put("SlayerUnlocks", slayer_dict);
 
 		//Other
 		HashMap<String, Integer> other_dict = new HashMap<String, Integer>();
 		other_dict.put("QP", client.getVar(VarPlayer.QUEST_POINTS));
 		other_dict.put("Combat", client.getLocalPlayer().getCombatLevel());
-		output_dict.put("Other",other_dict);
+		output_dict.put("Other", other_dict);
 
 		String output = gson.toJson(output_dict);
 		StringSelection stringselection = new StringSelection(output);
@@ -330,8 +330,8 @@ public class InfoPanel extends PluginPanel
 	private void updateLoggedIn()
 	{
 		final String name = sessionManager.getAccountSession() != null
-				? sessionManager.getAccountSession().getUsername()
-				: null;
+			? sessionManager.getAccountSession().getUsername()
+			: null;
 
 		if (name != null)
 		{
