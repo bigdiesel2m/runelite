@@ -246,6 +246,7 @@ public class InfoPanel extends PluginPanel
 		HashMap<String, Integer> other_dict = new HashMap<String, Integer>();
 		other_dict.put("QP", client.getVar(VarPlayer.QUEST_POINTS));
 		other_dict.put("Combat", client.getLocalPlayer().getCombatLevel());
+		other_dict.put("Iron", client.getAccountType().isIronman() ? 1 : 0);
 		output_dict.put("Other", other_dict);
 
 		String output = gson.toJson(output_dict);
