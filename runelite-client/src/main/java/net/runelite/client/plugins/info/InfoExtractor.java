@@ -17,7 +17,7 @@ import com.google.gson.Gson;
 public class InfoExtractor
 {
 
-	@com.google.inject.Inject
+	@Inject
 	private Gson gson;
 
 	@Inject
@@ -33,7 +33,7 @@ public class InfoExtractor
 			Map<String, Integer> skill_dict = new HashMap<>();
 			Map<String, Integer> favour_dict = new HashMap<>();
 			Map<SlayerUnlock, Boolean> slayer_dict = new HashMap<>();
-			Map<String, Integer> other_dict = new HashMap<String, Integer>();
+			Map<String, Integer> other_dict = new HashMap<>();
 
 			//Quests
 			for (Quest quest : Quest.values())
