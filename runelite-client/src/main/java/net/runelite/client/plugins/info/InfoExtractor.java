@@ -42,6 +42,7 @@ import lombok.Data;
 import net.runelite.api.Client;
 import net.runelite.api.Favour;
 import net.runelite.api.GameState;
+import net.runelite.api.Prayer;
 import net.runelite.api.Quest;
 import net.runelite.api.QuestState;
 import net.runelite.api.Skill;
@@ -60,6 +61,8 @@ class InfoExtractor
 		private Map<String, Integer> skillLevels;
 		private Map<String, Integer> favour;
 		private Map<SlayerUnlock, Boolean> slayerUnlocks;
+		private Map<Prayer, Boolean> prayerUnlocks;
+
 		private int questPoints;
 		private int combatLevel;
 		private AccountType accountType;
@@ -108,6 +111,8 @@ class InfoExtractor
 			.collect(ImmutableMap.toImmutableMap(f -> f.getName().toLowerCase(), f -> client.getVar(f.getVarbit())));
 		d.slayerUnlocks = Stream.of(SlayerUnlock.values())
 			.collect(ImmutableMap.toImmutableMap(Function.identity(), u -> u.isEnabled(client)));
+		d.prayerUnlocks = Stream.of(Prayer.values())
+			.collect(ImmutableMap.toImmutableMap(Function.identity(), u -> u.isUnlocked(client)));
 
 		d.questPoints = client.getVar(VarPlayer.QUEST_POINTS);
 		d.combatLevel = client.getLocalPlayer().getCombatLevel();
