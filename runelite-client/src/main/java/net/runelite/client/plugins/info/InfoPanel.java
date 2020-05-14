@@ -182,7 +182,7 @@ public class InfoPanel extends PluginPanel
 		actionsContainer.add(buildLinkPanel(PATREON_ICON, "Become a patron to", "help support RuneLite", RuneLiteProperties.getPatreonLink()));
 		actionsContainer.add(buildLinkPanel(WIKI_ICON, "Information about", "RuneLite and plugins", RuneLiteProperties.getWikiLink()));
 
-		if (client != null)
+		if (client != null && client.getLocalPlayer() != null)
 		{
 			actionsContainer.add(buildLinkPanel(IMPORT_ICON, "Export info to", "online calculators", this::getPlayerInfo));
 		}
@@ -194,21 +194,20 @@ public class InfoPanel extends PluginPanel
 		eventBus.register(this);
 	}
 
+	private void getPlayerInfo()
+	{
+		{
+			InfoExtractor infoExtract = infoExtractor.get();
+			infoExtract.extractInfo(client);
+		}
+	}
+
 	/**
 	 * Builds a link panel with a given icon, text and url to redirect to.
 	 */
 	private static JPanel buildLinkPanel(ImageIcon icon, String topText, String bottomText, String url)
 	{
 		return buildLinkPanel(icon, topText, bottomText, () -> LinkBrowser.browse(url));
-	}
-
-	private void getPlayerInfo()
-	{
-		if (client != null && client.getLocalPlayer() != null)
-		{
-			InfoExtractor infoExtract = infoExtractor.get();
-			infoExtract.extractInfo(client);
-		}
 	}
 
 	/**
