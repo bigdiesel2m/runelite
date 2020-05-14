@@ -203,7 +203,7 @@ public class InfoPanel extends PluginPanel
 		if (client != null && client.getLocalPlayer() != null)
 		{
 			InfoExtractor infoExtract = infoExtractor.get();
-			infoExtract.doStuff(client);
+			infoExtract.extractInfo(client);
 		}
 	}
 

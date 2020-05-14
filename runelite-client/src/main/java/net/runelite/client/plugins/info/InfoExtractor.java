@@ -23,7 +23,7 @@ public class InfoExtractor
 	private ClientThread clientThread;
 
 
-	public void doStuff(Client client)
+	public void extractInfo(Client client)
 	{
 		clientThread.invokeLater(() ->
 		{
