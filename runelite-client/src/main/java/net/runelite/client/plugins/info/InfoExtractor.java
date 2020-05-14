@@ -2,6 +2,7 @@ package net.runelite.client.plugins.info;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
+import java.util.Map;
 import java.util.HashMap;
 import javax.inject.Inject;
 import net.runelite.api.Client;
@@ -27,12 +28,12 @@ public class InfoExtractor
 	{
 		clientThread.invokeLater(() ->
 		{
-			final HashMap<String, HashMap> output_dict = new HashMap<>();
-			final HashMap<Integer, String> quest_dict = new HashMap<>();
-			final HashMap<String, Integer> skill_dict = new HashMap<>();
-			final HashMap<String, Integer> favour_dict = new HashMap<>();
-			final HashMap<SlayerUnlock, Boolean> slayer_dict = new HashMap<>();
-			final HashMap<String, Integer> other_dict = new HashMap<String, Integer>();
+			Map<String, Map> output_dict = new HashMap<>();
+			Map<Integer, String> quest_dict = new HashMap<>();
+			Map<String, Integer> skill_dict = new HashMap<>();
+			Map<String, Integer> favour_dict = new HashMap<>();
+			Map<SlayerUnlock, Boolean> slayer_dict = new HashMap<>();
+			Map<String, Integer> other_dict = new HashMap<String, Integer>();
 
 			//Quests
 			for (Quest quest : Quest.values())
