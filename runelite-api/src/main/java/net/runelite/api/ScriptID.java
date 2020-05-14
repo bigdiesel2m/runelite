@@ -280,4 +280,13 @@ public final class ScriptID
 	 */
 	@ScriptArguments(integer = 1)
 	public static final int PVP_WIDGET_BUILDER = 388;
+
+	/**
+	 * Returns if a prayer is unlocked
+	 * <ul>
+	 * <li> int (enum#860 index> Prayer ID </li>
+	 * </ul>
+	 */
+	@ScriptArguments(integer = 1)
+	public static final int PRAYER_ISAVAILABLE = 464;
 }
