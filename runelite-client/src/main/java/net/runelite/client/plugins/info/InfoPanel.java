@@ -77,7 +77,7 @@ public class InfoPanel extends PluginPanel
 	private JPanel actionsContainer;
 
 	@Inject
-	private Provider<InfoExtractor> infoExtractor;
+	private Provider<InfoExtractor> infoExtractorProvider;
 
 	@Inject
 	@Nullable
@@ -181,22 +181,18 @@ public class InfoPanel extends PluginPanel
 		actionsContainer.add(buildLinkPanel(DISCORD_ICON, "Talk to us on our", "Discord server", RuneLiteProperties.getDiscordInvite()));
 		actionsContainer.add(buildLinkPanel(PATREON_ICON, "Become a patron to", "help support RuneLite", RuneLiteProperties.getPatreonLink()));
 		actionsContainer.add(buildLinkPanel(WIKI_ICON, "Information about", "RuneLite and plugins", RuneLiteProperties.getWikiLink()));
-		actionsContainer.add(buildLinkPanel(IMPORT_ICON, "Export info to", "online calculators", this::getPlayerInfo));
+
+		if (client != null)
+		{
+			InfoExtractor ie = infoExtractorProvider.get();
+			actionsContainer.add(buildLinkPanel(IMPORT_ICON, "Export info to", "online calculators", ie::copyToClipboard));
+		}
 
 		add(versionPanel, BorderLayout.NORTH);
 		add(actionsContainer, BorderLayout.CENTER);
 
 		updateLoggedIn();
 		eventBus.register(this);
-	}
-
-	private void getPlayerInfo()
-	{
-		if (client != null && client.getLocalPlayer() != null)
-		{
-			InfoExtractor infoExtract = infoExtractor.get();
-			infoExtract.extractInfo(client);
-		}
 	}
 
 	/**
